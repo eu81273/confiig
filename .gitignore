@@ -1,0 +1,7 @@
+node_modules
+*.iml
+.idea/
+npm-debug.log
+.DS_Store
+.cache
+report.*.json
