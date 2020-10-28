@@ -12,8 +12,9 @@ $ npm install confiig
 
 ## Usage
 Basically, configuration loads from `./config` directory. 
-You can set `CONFIG_PATH` environment variable to change default config path.
-`confiig` loads config file based on `BUILD_PHASE` or `NODE_ENV` environment variable.
+You can set `CONFIG_PATH` environment variable to change default config path. 
+`confiig` tries to load config file that named like `BUILD_PHASE or NODE_ENV` + '.js'. 
+If 'default.js' file exists then `confiig` consist configuration based on the 'default' file. 
 
 ```
 ├── config
@@ -34,11 +35,11 @@ console.log(conf.get('foo.bar'));
 ## API
 
 ```
-.get(path, [defaultValue])`
+.get(path, [defaultValue])
 ```
 
 path (string): The path of the property to get.  
-[defaultValue] (*): The value returned for undefined resolved values.  
+defaultValue (*): The value returned for undefined resolved values. Optional.  
 returns (*): the value in the config if found, otherwise it returns undefined.  
 <br/>
 ```
