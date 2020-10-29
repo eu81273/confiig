@@ -8,11 +8,13 @@ const {
   CONFIG_PATH = path.join(process.cwd(), 'config'),
 } = process.env;
 
-const envConfigPath = path.resolve(`${CONFIG_PATH}/${BUILD_PHASE}.js`);
 const defaultConfigPath = path.resolve(`${CONFIG_PATH}/default.js`);
-const envConfig = fs.existsSync(envConfigPath) ? require(envConfigPath) : {};
 const defaultConfig = fs.existsSync(defaultConfigPath) ? require(defaultConfigPath) : {};
-const mergedConfig = _.merge({}, defaultConfig, envConfig);
+const envConfigs = BUILD_PHASE
+  .split(/[+,:./]/)
+  .map(phase => path.resolve(`${CONFIG_PATH}/${phase}.js`))
+  .map(envConfigPath => fs.existsSync(envConfigPath) ? require(envConfigPath) : {});
+const mergedConfig = _.merge({}, defaultConfig, ...envConfigs);
 
 exports.get = path => _.get(mergedConfig, path);
 exports.has = path => _.has(mergedConfig, path);

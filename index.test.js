@@ -34,6 +34,20 @@ describe('🚚 confiig tests', () => {
     expect(conf.get('grault.garply')).toBe('garply');
   });
 
+  it('tests a successful multiple configuration retrival', () => {
+    process.env['CONFIG_PATH'] = './config';
+    process.env['NODE_ENV'] = 'development+local';
+    const conf = require('./index.js');
+
+    expect(conf.get('env')).toBe('local');
+    expect(conf.get('foo.bar')).toBe('bar');
+    expect(conf.get('not.exists')).toBe(undefined);
+    expect(conf.get('foo.baz')).toBe('baz-local');
+    expect(conf.get('foo.qux')).toBe('qux-local');
+    expect(conf.get('quuz.corge')).toBe('corge');
+    expect(conf.get('grault.garply')).toBe('garply');
+  });
+
   it('tests a successful fallback configuration retrival', () => {
     process.env['CONFIG_PATH'] = './config';
     process.env['NODE_ENV'] = 'another';

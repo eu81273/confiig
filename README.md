@@ -11,16 +11,20 @@ $ npm install confiig
 <br/>
 
 ## Usage
-Basically, configuration loads from `./config` directory. 
-You can set `CONFIG_PATH` environment variable to change default config path. 
-`confiig` tries to load config file that named like `BUILD_PHASE or NODE_ENV` + '.js'. 
-If 'default.js' file exists then `confiig` consist configuration based on the 'default' file. 
+Basically, configuration loads from `./config` directory.  
+You can set `CONFIG_PATH` environment variable to change default config path.  
+`confiig` tries to load config file that named like `BUILD_PHASE or NODE_ENV` + '.js'.  
+If 'default.js' file exists in config path then configuration consisted based on the 'default' file and merged `NODE_ENV` configs into default one.  
+Multiple configs can be merged with separator.
+For example, set `NODE_ENV` with separator like `local+foo` then `default.js + local.js + foo.js` files are merged.  
+The separator can be `+`, `,`, `:`, `.` and `/`.  
 
 ```
 ├── config
 │   ├── cbt.js
 │   ├── default.js
 │   ├── development.js
+│   ├── local.js
 │   ├── production.js
 │   └── sandbox.js
 ```
