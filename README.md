@@ -14,10 +14,6 @@ $ npm install confiig
 Basically, configuration loads from `./config` directory.  
 You can set `CONFIG_PATH` environment variable to change default config path.  
 `confiig` tries to load config file that named like `BUILD_PHASE or NODE_ENV` + '.js'.  
-If 'default.js' file exists in config path then configuration consisted based on the 'default' file and merged `NODE_ENV` configs into default one.  
-Multiple configs can be merged with separator.
-For example, set `NODE_ENV` with separator like `local+foo` then `default.js + local.js + foo.js` files are merged.  
-The separator can be `+`, `,`, `:`, `.` and `/`.  
 
 ```
 ├── config
@@ -34,7 +30,16 @@ import conf from 'confiig';
 
 console.log(conf.get('foo.bar'));
 ```
-<br/>
+
+
+### Default config
+If 'default.js' file exists in config path then configuration consisted based on the 'default' file and merged `NODE_ENV` configs into default one.  
+
+### Multiple Configs
+Multiple configs can be merged with separator.
+For example, set `NODE_ENV` with separator like `local+foo` then `default.js + local.js + foo.js` configs are merged.  
+The separator can be `+`, `,`, `:`, `.` and `/`.  
+<br/><br/>
 
 ## API
 
@@ -42,13 +47,14 @@ console.log(conf.get('foo.bar'));
 .get(path, [defaultValue])
 ```
 
-path (string): The path of the property to get.  
-defaultValue (*): The value returned for undefined resolved values. Optional.  
-returns (*): the value in the config if found, otherwise it returns undefined.  
+`path (string)`: The path of the property to get.  
+`defaultValue (any)`: The value returned for undefined resolved values. Optional.  
+`returns (any)`: the value in the config if found, otherwise it returns undefined.  
 <br/>
 ```
 .has(path)
 ```
-path (string): The path to check.  
-returns (boolean): true if the path exists false if it does not.  
+
+`path (string)`: The path to check.  
+`returns (boolean)`: true if the path exists false if it does not.  
 
