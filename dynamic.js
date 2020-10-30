@@ -2,38 +2,34 @@ const fs = require('fs');
 const path = require('path');
 const _ = require('lodash');
 
-const configMap = new Map();
-const { CONFIG_PATH = path.join(process.cwd(), 'config') } = process.env;
-
-const removeExt = filename => filename.replace(/\.[^.]+$/, '');
-const resolvePath = (configPath, filename) => path.resolve(`${configPath}/${filename}`);
-const requireConfig = (filepath) => {
-  delete require.cache[filepath];
-  return fs.existsSync(filepath) ? require(filepath) : {};
-};
-const mergeConfig = () => {
+const configs = new Map();
+const configPath = process.env.CONFIG_PATH || path.join(process.cwd(), 'config');
+const combinedConfig = _.memoize(function () {
   const { NODE_ENV = 'development', BUILD_PHASE = NODE_ENV } = process.env;
   const activePhases = ['default', ...BUILD_PHASE.split('/')];
-  const activeConfigs = activePhases.map(phase => configMap.get(phase) || {});
-  const mergedConfig = _.merge({}, ...activeConfigs);
-  return mergedConfig;
-};
+  const activeConfigs = activePhases.map(key => configs.get(key) || {});
+
+  return _.merge({}, ...activeConfigs);;
+}, () => process.env.NODE_ENV + process.env.BUILD_PHASE);
+
+function loadConfigFile (filename) {
+  const phase = filename.replace(/\.[^.]+$/, '');
+  const filepath = path.resolve(`${configPath}/${filename}`);
+  delete require.cache[filepath];
+  configs.set(phase, fs.existsSync(filepath) ? require(filepath) : {});
+}
+
+// load initial configs
+fs.readdirSync(configPath).map(loadConfigFile)
 
 // watch config changes
-fs.watch(CONFIG_PATH, (eventType, filename) => {
-  if (eventType === 'change', filename) {
-    const phase = removeExt(filename);
-    const filepath = resolvePath(CONFIG_PATH, filename);
-    const config = requireConfig(filepath);
-    configMap.set(phase, config);
+const watcher = fs.watch(configPath, (eventType, filename) => {
+  if (eventType === 'change' && filename) {
+    loadConfigFile(filename);
+    combinedConfig.cache.clear();
   }
 });
 
-// load initial configs
-fs.readdirSync(CONFIG_PATH)
-  .map(filename => [removeExt(filename), resolvePath(CONFIG_PATH, filename)])
-  .map(([phase, filepath]) => [phase, requireConfig(filepath)])
-  .forEach(([phase, config]) => configMap.set(phase, config));
-
-exports.get = path => _.get(mergeConfig(), path);
-exports.has = path => _.has(mergeConfig(), path);
+exports.get = path => _.get(combinedConfig(), path);
+exports.has = path => _.has(combinedConfig(), path);
+exports.watcher = watcher;

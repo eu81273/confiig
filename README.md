@@ -40,8 +40,7 @@ Multiple configs can be merged with separator.
 For example, set `NODE_ENV` with separator `/` like `local/foo` then `default.js + local.js + foo.js` configs are merged.  
 
 ### Dynamic Configuration
-With `confiig/dynamic` module, you can get values latest. `confiig/dynamic` module watchs change of NODE_ENV and config files.
-If config files or NODE_ENV changes then the returning value changes according to.
+With `confiig/dynamic` module, you can get values dynamically. `confiig/dynamic` module watchs change of NODE_ENV and config files. If config files or NODE_ENV modified then `confiig` re-calculate combined config values immediately.
 
 ```js
 import conf from 'confiig/dynamic';
@@ -51,6 +50,8 @@ console.log(conf.get('foo.bar')); // development config value
 
 process.env.NODE_ENV = 'sandbox';
 console.log(conf.get('foo.bar')); // sandbox config value
+
+conf.watcher.close(); // stop watching config file changes
 ```
 <br/><br/>
 
