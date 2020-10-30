@@ -1,7 +1,7 @@
 # confiig
 
-Super simple config library for node.js application.
-confiig loads configuration based on `NODE_ENV` environment variable. 
+Super simple config library for node.js application.  
+confiig loads configuration based on `NODE_ENV` environment variable.  
 <br/><br/>
 
 ## Getting Started
@@ -39,6 +39,20 @@ If 'default.js' file exists in config path then configuration consisted based on
 Multiple configs can be merged with separator.
 For example, set `NODE_ENV` with separator like `local+foo` then `default.js + local.js + foo.js` configs are merged.  
 The separator can be `+`, `,`, `:`, `.` and `/`.  
+
+### Dynamic Configuration
+With `confiig/dynamic` module, you can get values latest. `confiig/dynamic` module watchs change of NODE_ENV and config files.
+If config files or NODE_ENV changes then the returning value changes according to.
+
+```js
+import conf from 'confiig/dynamic';
+
+process.env.NODE_ENV = 'development';
+console.log(conf.get('foo.bar')); // development config value
+
+process.env.NODE_ENV = 'sandbox';
+console.log(conf.get('foo.bar')); // sandbox config value
+```
 <br/><br/>
 
 ## API
