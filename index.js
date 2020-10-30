@@ -2,19 +2,24 @@ const fs = require('fs');
 const path = require('path');
 const _ = require('lodash');
 
-const {
-  NODE_ENV = 'development',
-  BUILD_PHASE = NODE_ENV,
-  CONFIG_PATH = path.join(process.cwd(), 'config'),
-} = process.env;
+const configs = new Map();
+const configPath = process.env.CONFIG_PATH || path.join(process.cwd(), 'config');
+const combinedConfig = _.memoize(function () {
+  const { NODE_ENV = 'development', BUILD_PHASE = NODE_ENV } = process.env;
+  const activePhases = ['default', ...BUILD_PHASE.split('/')];
+  const activeConfigs = activePhases.map(key => configs.get(key) || {});
 
-const defaultConfigPath = path.resolve(`${CONFIG_PATH}/default.js`);
-const defaultConfig = fs.existsSync(defaultConfigPath) ? require(defaultConfigPath) : {};
-const envConfigs = BUILD_PHASE
-  .split('/')
-  .map(phase => path.resolve(`${CONFIG_PATH}/${phase}.js`))
-  .map(envConfigPath => fs.existsSync(envConfigPath) ? require(envConfigPath) : {});
-const mergedConfig = _.merge({}, defaultConfig, ...envConfigs);
+  return _.merge({}, ...activeConfigs);;
+}, () => process.env.NODE_ENV + process.env.BUILD_PHASE);
 
-exports.get = path => _.get(mergedConfig, path);
-exports.has = path => _.has(mergedConfig, path);
+function loadConfigFile (filename) {
+  const phase = filename.replace(/\.[^.]+$/, '');
+  const filepath = path.resolve(`${configPath}/${filename}`);
+  configs.set(phase, fs.existsSync(filepath) ? require(filepath) : {});
+}
+
+// load initial configs
+fs.readdirSync(configPath).map(loadConfigFile)
+
+exports.get = path => _.get(combinedConfig(), path);
+exports.has = path => _.has(combinedConfig(), path);
