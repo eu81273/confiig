@@ -13,7 +13,7 @@ const requireConfig = (filepath) => {
 };
 const mergeConfig = () => {
   const { NODE_ENV = 'development', BUILD_PHASE = NODE_ENV } = process.env;
-  const activePhases = ['default', ...BUILD_PHASE.split(/[+,:./]/)];
+  const activePhases = ['default', ...BUILD_PHASE.split('/')];
   const activeConfigs = activePhases.map(phase => configMap.get(phase) || {});
   const mergedConfig = _.merge({}, ...activeConfigs);
   return mergedConfig;

@@ -1,6 +1,6 @@
 {
   "name": "confiig",
-  "version": "2.1.0",
+  "version": "3.0.0",
   "description": "Load configuration based on the NODE_ENV",
   "main": "index.js",
   "scripts": {

@@ -11,7 +11,7 @@ const {
 const defaultConfigPath = path.resolve(`${CONFIG_PATH}/default.js`);
 const defaultConfig = fs.existsSync(defaultConfigPath) ? require(defaultConfigPath) : {};
 const envConfigs = BUILD_PHASE
-  .split(/[+,:./]/)
+  .split('/')
   .map(phase => path.resolve(`${CONFIG_PATH}/${phase}.js`))
   .map(envConfigPath => fs.existsSync(envConfigPath) ? require(envConfigPath) : {});
 const mergedConfig = _.merge({}, defaultConfig, ...envConfigs);

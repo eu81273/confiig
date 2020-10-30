@@ -36,7 +36,7 @@ describe('🚚 confiig tests', () => {
 
   it('tests a successful multiple configuration retrival', () => {
     process.env['CONFIG_PATH'] = './config';
-    process.env['NODE_ENV'] = 'development+local';
+    process.env['NODE_ENV'] = 'development/local';
     const conf = require('./index.js');
 
     expect(conf.get('env')).toBe('local');
@@ -76,7 +76,6 @@ describe('🚚 confiig tests', () => {
     expect(conf.get('waldo.fred')).toBe('fred');
 
     process.env['NODE_ENV'] = 'development';
-
     expect(conf.get('env')).toBe('development');
     expect(conf.get('foo.bar')).toBe('bar');
     expect(conf.get('not.exists')).toBe(undefined);
@@ -85,8 +84,7 @@ describe('🚚 confiig tests', () => {
     expect(conf.get('quuz.corge')).toBe('corge');
     expect(conf.get('grault.garply')).toBe('garply');
 
-    process.env['NODE_ENV'] = 'development+local';
-
+    process.env['NODE_ENV'] = 'development/local';
     expect(conf.get('env')).toBe('local');
     expect(conf.get('foo.bar')).toBe('bar');
     expect(conf.get('not.exists')).toBe(undefined);

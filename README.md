@@ -37,8 +37,7 @@ If 'default.js' file exists in config path then configuration consisted based on
 
 ### Multiple Configs
 Multiple configs can be merged with separator.
-For example, set `NODE_ENV` with separator like `local+foo` then `default.js + local.js + foo.js` configs are merged.  
-The separator can be `+`, `,`, `:`, `.` and `/`.  
+For example, set `NODE_ENV` with separator `/` like `local/foo` then `default.js + local.js + foo.js` configs are merged.  
 
 ### Dynamic Configuration
 With `confiig/dynamic` module, you can get values latest. `confiig/dynamic` module watchs change of NODE_ENV and config files.
