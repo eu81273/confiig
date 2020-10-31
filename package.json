@@ -1,10 +1,10 @@
 {
   "name": "confiig",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "description": "Load configuration based on the NODE_ENV",
   "main": "index.js",
   "scripts": {
-    "test": "jest --forceExit"
+    "test": "jest"
   },
   "author": "aiden ahn",
   "repository": {

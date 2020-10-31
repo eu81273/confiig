@@ -92,5 +92,7 @@ describe('🚚 confiig tests', () => {
     expect(conf.get('foo.qux')).toBe('qux-local');
     expect(conf.get('quuz.corge')).toBe('corge');
     expect(conf.get('grault.garply')).toBe('garply');
+
+    conf.watcher.close(); // stop watching config files.
   });
 });
