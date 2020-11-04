@@ -1,10 +1,11 @@
 {
   "name": "confiig",
-  "version": "3.1.1",
+  "version": "3.1.2",
   "description": "Load configuration based on the NODE_ENV",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "prepare": "jest"
   },
   "author": "aiden ahn",
   "repository": {

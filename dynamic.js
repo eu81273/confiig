@@ -23,11 +23,11 @@ function loadConfigFile (filename) {
 }
 
 // load initial configs
-fs.readdirSync(configPath).map(loadConfigFile)
+fs.readdirSync(configPath).forEach(loadConfigFile)
 
 // watch config changes
-const watcher = fs.watch(configPath, (eventType, filename) => {
-  if (eventType === 'change' && filename) {
+const watcher = fs.watch(configPath, (_, filename) => {
+  if (filename) {
     loadConfigFile(filename);
     combinedConfig.cache.clear();
   }

@@ -23,7 +23,7 @@ function loadConfigFile (filename) {
 }
 
 // load initial configs
-fs.readdirSync(configPath).map(loadConfigFile)
+fs.readdirSync(configPath).forEach(loadConfigFile)
 
 exports.get = path => get(combinedConfig(), path);
 exports.has = path => has(combinedConfig(), path);
