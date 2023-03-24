@@ -1,7 +1,7 @@
 # confiig
 
-Super simple config library for node.js application.  
-confiig loads configuration based on `NODE_ENV` environment variable.  
+Super simple config loader.
+`confiig` loads configuration based on `NODE_ENV` environment variable.  
 <br/><br/>
 
 ## Getting Started
@@ -26,49 +26,39 @@ You can set `CONFIG_PATH` environment variable to change default config path.
 ```
 
 ```js
-import conf from 'confiig';
+const conf = require('confiig');
 
-console.log(conf.get('foo.bar'));
+console.log(conf.read('foo.bar'));
 ```
 
 
 ### Default config
-If 'default.js' file exists in config path then configuration consisted based on the 'default' file and merged `NODE_ENV` configs into default one.  
+If 'default.js' config file exists in config path then configuration consisted based on the 'default' file and merged `NODE_ENV` configs into default one.  
 
 ### Multiple Configs
 Multiple configs can be merged with separator.
 For example, set `NODE_ENV` with separator `/` like `local/foo` then `default.js + local.js + foo.js` configs are merged.  
 
-### Dynamic Configuration
-With `confiig/dynamic` module, you can get values dynamically. `confiig/dynamic` module watchs change of config files. If one of config file modified then `confiig` re-calculate combined config values.
+### Dynamic NODE_ENV
+If the `NODE_ENV` or `BUILD_PHASE` environment variable changes, it will automatically reread and merge the config files and return the path values when you call the read method. If no changes that environment variable, then it memoization that merged configs.
 
 ```js
-import conf from 'confiig/dynamic';
+const conf = require('confiig');
 
 process.env.NODE_ENV = 'development';
-console.log(conf.get('foo.bar')); // development config value
+console.log(conf.read('foo.bar')); // development config value
 
 process.env.NODE_ENV = 'sandbox';
-console.log(conf.get('foo.bar')); // sandbox config value
-
-conf.watcher.close(); // stop watching config file changes
+console.log(conf.read('foo.bar')); // sandbox config value
 ```
 <br/><br/>
 
 ## API
 
 ```
-.get(path, [defaultValue])
+.read(path, [defaultValue])
 ```
 
 `path (string)`: The path of the property to get.  
 `defaultValue (any)`: The value returned for undefined resolved values. Optional.  
 `returns (any)`: the value in the config if found, otherwise it returns undefined.  
-<br/>
-```
-.has(path)
-```
-
-`path (string)`: The path to check.  
-`returns (boolean)`: true if the path exists false if it does not.  
-

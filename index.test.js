@@ -1,98 +1,82 @@
-describe('🚚 confiig tests', () => {
-  beforeEach(() => {
-    jest.resetModules();
-    delete process.env['CONFIG_PATH'];
-    delete process.env['BUILD_PHASE'];
-    delete process.env['NODE_ENV'];
-  });
+const test = require('ava');
 
-  it('tests a successful production configuration retrival', () => {
-    process.env['CONFIG_PATH'] = './config';
-    process.env['NODE_ENV'] = 'production';
-    const conf = require('./index.js');
+test('tests a successful production configuration retrieval', t => {
+  process.env.CONFIG_PATH = './config';
+  process.env.NODE_ENV = 'production';
+  const conf = require('./');
 
-    expect(conf.get('env')).toBe('production');
-    expect(conf.get('foo.bar')).toBe('bar');
-    expect(conf.get('not.exists')).toBe(undefined);
-    expect(conf.get('foo.baz')).toBe('baz-production');
-    expect(conf.get('foo.qux')).toBe('qux-production');
-    expect(conf.get('quuz.corge')).toBe('corge');
-    expect(conf.get('waldo.fred')).toBe('fred');
-  });
+  t.is(conf.read('env'), 'production');
+  t.is(conf.read('foo.bar'), 'bar');
+  t.is(conf.read('not.exists'), undefined);
+  t.is(conf.read('foo.baz'), 'baz-production');
+  t.is(conf.read('foo.qux'), 'qux-production');
+  t.is(conf.read('quuz.corge'), 'corge');
+  t.is(conf.read('waldo.fred'), 'fred');
+});
 
-  it('tests a successful development configuration retrival', () => {
-    process.env['CONFIG_PATH'] = './config';
-    process.env['NODE_ENV'] = 'development';
-    const conf = require('./index.js');
+test('tests a successful development configuration retrieval', t => {
+  process.env.CONFIG_PATH = './config';
+  process.env.NODE_ENV = 'development';
+  const conf = require('./');
 
-    expect(conf.get('env')).toBe('development');
-    expect(conf.get('foo.bar')).toBe('bar');
-    expect(conf.get('not.exists')).toBe(undefined);
-    expect(conf.get('foo.baz')).toBe('baz-development');
-    expect(conf.get('foo.qux')).toBe('qux-development');
-    expect(conf.get('quuz.corge')).toBe('corge');
-    expect(conf.get('grault.garply')).toBe('garply');
-  });
+  t.is(conf.read('env'), 'development');
+  t.is(conf.read('foo.bar'), 'bar');
+  t.is(conf.read('not.exists'), undefined);
+  t.is(conf.read('foo.baz'), 'baz-development');
+  t.is(conf.read('foo.qux'), 'qux-development');
+  t.is(conf.read('quuz.corge'), 'corge');
+  t.is(conf.read('grault.garply'), 'garply');
+});
 
-  it('tests a successful multiple configuration retrival', () => {
-    process.env['CONFIG_PATH'] = './config';
-    process.env['NODE_ENV'] = 'development/local';
-    const conf = require('./index.js');
+test('tests a successful multiple configuration retrieval', t => {
+  process.env.CONFIG_PATH = './config';
+  process.env.NODE_ENV = 'development/local';
+  const conf = require('./');
 
-    expect(conf.get('env')).toBe('local');
-    expect(conf.get('foo.bar')).toBe('bar');
-    expect(conf.get('not.exists')).toBe(undefined);
-    expect(conf.get('foo.baz')).toBe('baz-local');
-    expect(conf.get('foo.qux')).toBe('qux-local');
-    expect(conf.get('quuz.corge')).toBe('corge');
-    expect(conf.get('grault.garply')).toBe('garply');
-  });
+  t.is(conf.read('env'), 'local');
+  t.is(conf.read('foo.bar'), 'bar');
+  t.is(conf.read('not.exists'), undefined);
+  t.is(conf.read('foo.baz'), 'baz-local');
+  t.is(conf.read('foo.qux'), 'qux-local');
+  t.is(conf.read('quuz.corge'), 'corge');
+  t.is(conf.read('grault.garply'), 'garply');
+});
 
-  it('tests a successful fallback configuration retrival', () => {
-    process.env['CONFIG_PATH'] = './config';
-    process.env['NODE_ENV'] = 'another';
-    const conf = require('./index.js');
+test('tests a successful fallback configuration retrieval', t => {
+  process.env.CONFIG_PATH = './config';
+  process.env.NODE_ENV = 'another';
+  const conf = require('./');
 
-    expect(conf.get('env')).toBe('default');
-    expect(conf.get('foo.bar')).toBe('bar');
-    expect(conf.get('not.exists')).toBe(undefined);
-    expect(conf.get('foo.baz')).toBe('baz');
-    expect(conf.get('foo.qux')).toBe(undefined);
-    expect(conf.get('quuz.corge')).toBe('corge');
-    expect(conf.get('grault.garply')).toBe(undefined);
-  });
+  t.is(conf.read('env'), 'default');
+  t.is(conf.read('foo.bar'), 'bar');
+  t.is(conf.read('not.exists'), undefined);
+  t.is(conf.read('foo.baz'), 'baz');
+  t.is(conf.read('foo.qux'), undefined);
+  t.is(conf.read('quuz.corge'), 'corge');
+  t.is(conf.read('grault.garply'), undefined);
+});
 
-  it('tests a successful dynamic configuration retrival', () => {
-    process.env['CONFIG_PATH'] = './config';
-    process.env['NODE_ENV'] = 'production';
-    const conf = require('./dynamic.js');
+test('tests a successful configuration retrieval according to NODE_ENV', t => {
+  process.env.CONFIG_PATH = './config';
+  process.env.NODE_ENV = 'production';
+  const conf = require('./');
 
-    expect(conf.get('env')).toBe('production');
-    expect(conf.get('foo.bar')).toBe('bar');
-    expect(conf.get('not.exists')).toBe(undefined);
-    expect(conf.get('foo.baz')).toBe('baz-production');
-    expect(conf.get('foo.qux')).toBe('qux-production');
-    expect(conf.get('quuz.corge')).toBe('corge');
-    expect(conf.get('waldo.fred')).toBe('fred');
+  t.is(conf.read('env'), 'production');
+  t.is(conf.read('refer'), 'refer production');
+  t.is(conf.read('foo.bar'), 'bar');
+  t.is(conf.read('not.exists'), undefined);
+  t.is(conf.read('foo.baz'), 'baz-production');
+  t.is(conf.read('foo.qux'), 'qux-production');
+  t.is(conf.read('quuz.corge'), 'corge');
+  t.is(conf.read('waldo.fred'), 'fred');
 
-    process.env['NODE_ENV'] = 'development';
-    expect(conf.get('env')).toBe('development');
-    expect(conf.get('foo.bar')).toBe('bar');
-    expect(conf.get('not.exists')).toBe(undefined);
-    expect(conf.get('foo.baz')).toBe('baz-development');
-    expect(conf.get('foo.qux')).toBe('qux-development');
-    expect(conf.get('quuz.corge')).toBe('corge');
-    expect(conf.get('grault.garply')).toBe('garply');
-
-    process.env['NODE_ENV'] = 'development/local';
-    expect(conf.get('env')).toBe('local');
-    expect(conf.get('foo.bar')).toBe('bar');
-    expect(conf.get('not.exists')).toBe(undefined);
-    expect(conf.get('foo.baz')).toBe('baz-local');
-    expect(conf.get('foo.qux')).toBe('qux-local');
-    expect(conf.get('quuz.corge')).toBe('corge');
-    expect(conf.get('grault.garply')).toBe('garply');
-
-    conf.watcher.close(); // stop watching config files.
-  });
+  process.env.NODE_ENV = 'development';
+  t.is(conf.read('env'), 'development');
+  t.is(conf.read('refer'), 'refer development');
+  t.is(conf.read('foo.bar'), 'bar');
+  t.is(conf.read('not.exists'), undefined);
+  t.is(conf.read('foo.baz'), 'baz-development');
+  t.is(conf.read('foo.qux'), 'qux-development');
+  t.is(conf.read('quuz.corge'), 'corge');
+  t.is(conf.read('grault.garply'), 'garply');
 });

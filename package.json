@@ -1,11 +1,14 @@
 {
   "name": "confiig",
-  "version": "3.1.2",
-  "description": "Load configuration based on the NODE_ENV",
+  "version": "4.0.0",
+  "description": "Super simple config loader 💾",
   "main": "index.js",
+  "types": "index.d.ts",
+  "engines": {
+    "node": ">= 14"
+  },
   "scripts": {
-    "test": "jest",
-    "prepare": "jest"
+    "test": "ava"
   },
   "author": "aiden ahn",
   "repository": {
@@ -18,8 +21,7 @@
     "conf",
     "configuration",
     "env",
-    "environment",
-    "dynamic"
+    "environment"
   ],
   "license": "MIT",
   "bugs": {
@@ -27,9 +29,10 @@
   },
   "homepage": "https://github.com/eu81273/confiig",
   "dependencies": {
-    "lodash": "^4.17.20"
+    "lodash": "^4.17.21"
   },
   "devDependencies": {
-    "jest": "^26.6.1"
+    "@ava/typescript": "^4.0.0",
+    "ava": "^5.2.0"
   }
 }
