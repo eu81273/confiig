@@ -1,6 +1,6 @@
 {
   "name": "confiig",
-  "version": "4.0.0",
+  "version": "4.0.3",
   "description": "Super simple config loader 💾",
   "main": "index.js",
   "types": "index.d.ts",
