@@ -4,7 +4,7 @@ const merge = require('lodash/merge');
 const memoize = require('lodash/memoize');
 
 const DEFAULT_PHASE = 'development';
-const requireConfig = (phase) => {
+const uncachedRequire = (phase) => {
   try {
     const configPath = path.resolve(process.env.CONFIG_PATH || path.join(process.cwd(), 'config'), phase);
     delete require.cache[configPath];
@@ -15,7 +15,7 @@ const requireConfig = (phase) => {
 }
 const mergedConfig = memoize(function () {
   const { NODE_ENV = DEFAULT_PHASE, BUILD_PHASE = NODE_ENV } = process.env;
-  return merge({}, ...['default', ...BUILD_PHASE.split('/')].map(requireConfig));
+  return merge({}, ...['default', ...BUILD_PHASE.split('/')].map(uncachedRequire));
 }, () => process.env.NODE_ENV + process.env.BUILD_PHASE);
 
 /**
