@@ -66,6 +66,6 @@ console.log(conf.read('foo.bar')); // sandbox config value
 
 ## License
 
-May be freely distributed under the [MIT license](https://github.com/eu81273/confiig/blob/main/LICENSE).
+May be freely distributed under the [MIT license](https://github.com/eu81273/confiig/blob/master/LICENSE).
 
 Copyright (c) 2021-2023 eu81273
