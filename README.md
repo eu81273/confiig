@@ -61,4 +61,11 @@ console.log(conf.read('foo.bar')); // sandbox config value
 
 `path (string)`: The path of the property to get.  
 `defaultValue (any)`: The value returned for undefined resolved values. Optional.  
-`returns (any)`: the value in the config if found, otherwise it returns undefined.  
+`returns (any)`: the value in the config if found, otherwise it returns undefined.
+<br/><br/>
+
+## License
+
+May be freely distributed under the [MIT license](https://github.com/eu81273/confiig/blob/main/LICENSE).
+
+Copyright (c) 2021-2023 eu81273
